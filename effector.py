@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw
 import sys
 import math
 from io import BytesIO
@@ -26,42 +26,34 @@ def resize_image(img, cur_size, target_size):
     return img.resize((x_, y_), Image.ANTIALIAS)
 
 
-def snow(img, n_frames=50, n_particles=100, avr_speed=30, speed_deviation_level=1):
-    size_x, size_y = img.size
+def snow(img, n_frames=50, n_particles=50, avr_speed=30, speed_deviation_level=1):
 
     avr_particle_size = 6
 
-    snow_particles = []
+    snow_particles = []  # snow particle objects
     for i in range(n_particles):
-        snow_particles.append(Snow(max_x=size_x, max_y=size_y, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-10, 10), speed_y=avr_speed+random.randint(-20,20)))
+        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-10, 10), speed_y=avr_speed+random.randint(-20, 20)))
 
-    frames = []
+    frames = []  # frames that will compose animated image
     for i in range(n_frames):
 
         frame = img.copy()
-        pixels = frame.load()
+        effect_mask = Image.new('RGBA', img.size)  # image for masking
+        draw_board = ImageDraw.Draw(effect_mask)
 
         for p in snow_particles:
 
-            px, py = p.get_position()
-            sz = p.get_size()
-            sz_half = sz // 2
-            for x in range(-sz_half, sz_half+1):
-                for y in range(-sz_half, sz_half+1):
-                    xx = max(min(px+x, size_x-1), 0)
-                    yy = max(min(py+y, size_y-1), 0)
-
-                    if abs(xx-px)**2 + abs(yy-py)**2 < sz:
-                        pixels[xx, yy] = p.color
-
+            p.draw(draw_board)  # draw new particle
             p.move()
 
+        frame.paste(effect_mask, mask=effect_mask)
         frames.append(frame)
 
     return frames
 
 
 def main():
+
     filename = sys.argv[1]
     img = Image.open(filename)
     img = img.convert('P', palette=Image.ADAPTIVE)

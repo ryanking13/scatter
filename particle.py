@@ -3,13 +3,13 @@ import random
 
 class Particle:
 
-    def __init__(self, max_x, max_y, size, speed_x, speed_y):
-        self._max_x = max_x
-        self._max_y = max_y
+    def __init__(self, xy, size, speed_x, speed_y):
+        self._max_x = xy[0]
+        self._max_y = xy[1]
         self._size = size
 
-        self._x = random.randint(0, max_x)
-        self._y = random.randint(-max_y, 0)
+        self._x = random.randint(0, self._max_x)
+        self._y = random.randint(-self._max_y, 0)
 
         self._speed_x = speed_x
         self._speed_y = speed_y
@@ -29,6 +29,28 @@ class Particle:
 
 class Snow(Particle):
 
-    def __init__(self, max_x, max_y, size, speed_x, speed_y):
-        super().__init__(max_x, max_y, size, speed_x, speed_y)
-        self.color = 0
+    def __init__(self, xy, size, speed_x, speed_y, color=(255, 255, 255)):
+        super().__init__(xy, size, speed_x, speed_y)
+        self.color = color
+
+    def draw(self, d):
+
+        n_slices = 40  # how many slices will compose one particle
+
+        x, y = self.get_position()
+        r = self.get_size()
+        col = self.color
+
+        st_x = x - r
+        st_y = y - r
+        ed_x = x + r
+        ed_y = y + r
+
+        gap = r // 3  # slice will move from outline(r) to gap
+        coord_offset = (r - gap) / n_slices  # how much coordinate will be changed per slice
+        fill_offset = 255 / n_slices  # how much fill will be changed per slice
+        for i in range(n_slices):
+            co = int(i * coord_offset)
+            fo = int(i * fill_offset)
+
+            d.ellipse([st_x + co, st_y + co, ed_x - co, ed_y - co], fill=col + (fo,))

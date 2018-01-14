@@ -32,6 +32,7 @@ class Snow(Particle):
     def __init__(self, xy, size, speed_x, speed_y, color=(255, 255, 255)):
         super().__init__(xy, size, speed_x, speed_y)
         self.color = color
+        self.color = (255, 0, 0)
 
     def draw(self, d):
 
@@ -41,6 +42,7 @@ class Snow(Particle):
         r = self.get_size()
         col = self.color
 
+
         st_x = x - r
         st_y = y - r
         ed_x = x + r
@@ -48,7 +50,8 @@ class Snow(Particle):
 
         gap = r // 3  # slice will move from outline(r) to gap
         coord_offset = (r - gap) / n_slices  # how much coordinate will be changed per slice
-        fill_offset = 255 / n_slices  # how much fill will be changed per slice
+        max_fill = 200
+        fill_offset = max_fill / n_slices  # how much fill will be changed per slice
         for i in range(n_slices):
             co = int(i * coord_offset)
             fo = int(i * fill_offset)

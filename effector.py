@@ -26,13 +26,13 @@ def resize_image(img, cur_size, target_size):
     return img.resize((x_, y_), Image.ANTIALIAS)
 
 
-def snow(img, n_frames=50, n_particles=50, avr_speed=30, speed_deviation_level=1):
+def snow(img, n_frames=50, n_particles=50, avr_speed=10, speed_deviation_level=1):
 
-    avr_particle_size = 6
+    avr_particle_size = 3
 
     snow_particles = []  # snow particle objects
     for i in range(n_particles):
-        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-10, 10), speed_y=avr_speed+random.randint(-20, 20)))
+        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-10, 10), speed_y=avr_speed+random.randint(-10, 10)))
 
     frames = []  # frames that will compose animated image
     for i in range(n_frames):
@@ -58,7 +58,7 @@ def main():
     img = Image.open(filename)
     img = img.convert('P', palette=Image.ADAPTIVE)
     img_size = get_image_size(img)
-    MAX_FRAME_SIZE = 128 * 10**3  # 128 kb
+    MAX_FRAME_SIZE = 256 * 10**3  # 256 kb
 
     if img_size > MAX_FRAME_SIZE:
         img = resize_image(img, img_size, MAX_FRAME_SIZE)

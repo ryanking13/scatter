@@ -3,7 +3,7 @@ import sys
 import math
 from io import BytesIO
 from particle import *
-
+from lane import ParticleLane
 
 def get_image_size(image):
     tp_file = BytesIO()
@@ -25,8 +25,62 @@ def resize_image(img, cur_size, target_size):
     y_ = int(y * side_ratio)
     return img.resize((x_, y_), Image.ANTIALIAS)
 
+def snow_lane(img, n_lanes=10, n_frames=50, min_speed=(2, 5), speed_deviation=(2, 3),
+              min_particle_size=3, particle_size_deviation=2):
 
-def snow(img, n_frames=50, n_particles=50, avr_speed=10, speed_deviation_level=1):
+    lanes = []
+    for i in range(n_lanes):
+        position = (random.randint(0, img.size[0]), random.randint(0, img.size[1]))
+        speed_x = min_speed[0] + random.randint(0, speed_deviation[0])
+        speed_y = min_speed[1] + random.randint(0, speed_deviation[1])
+        size = min_particle_size + random.randint(0, particle_size_deviation)
+
+        lane = ParticleLane(
+            image_size=img.size,
+            base_position=position,
+            n_frames=n_frames,
+            particle_size=size,
+            speed_x=speed_x,
+            speed_y=speed_y,
+        )
+
+        lanes.append(lane)
+
+    snow_particles = []
+    for lane in lanes:
+        positions = lane.get_positions()
+        particle_size, speed_x, speed_y = lane.get_lane_info()
+
+        for pos in positions:
+            snow = Snow(
+                xy=img.size,
+                size=particle_size,
+                speed_x=speed_x,
+                speed_y=speed_y,
+                position=pos
+            )
+
+            snow_particles.append(snow)
+
+    frames = []  # frames that will compose animated image
+    for i in range(n_frames):
+
+        frame = img.copy()
+        effect_mask = Image.new('RGBA', img.size)  # image for masking
+        draw_board = ImageDraw.Draw(effect_mask)
+
+        for p in snow_particles:
+
+            p.draw(draw_board)  # draw new particle
+            p.move()
+
+        frame.paste(effect_mask, mask=effect_mask)
+        frames.append(frame)
+
+    return frames
+
+
+def snow(img, n_frames=50, n_particles=50, avr_speed=-10, speed_deviation_level=1):
 
     avr_particle_size = 3
 
@@ -63,10 +117,9 @@ def main():
     if img_size > MAX_FRAME_SIZE:
         img = resize_image(img, img_size, MAX_FRAME_SIZE)
 
-    frames = snow(img)
+    frames = snow_lane(img)
 
     img.save('out.gif', save_all=True, append_images=frames, optimize=True)
-
 
 if __name__ == '__main__':
     main()

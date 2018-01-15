@@ -3,13 +3,20 @@ import random
 
 class Particle:
 
-    def __init__(self, xy, size, speed_x, speed_y):
+    def __init__(self, xy, size, speed_x, speed_y, position=None):
         self._max_x = xy[0]
         self._max_y = xy[1]
         self._size = size
 
-        self._x = random.randint(0, self._max_x)
-        self._y = random.randint(-self._max_y, 0)
+        if not position:
+            self._x = random.randint(0, self._max_x)
+            self._y = random.randint(-self._max_y, 0)
+        else:
+            self._x = position[0]
+            self._y = position[1]
+
+        if speed_y < 0:
+            self._y = random.randint(self._max_y, self._max_y * 2)
 
         self._speed_x = speed_x
         self._speed_y = speed_y
@@ -29,8 +36,8 @@ class Particle:
 
 class Snow(Particle):
 
-    def __init__(self, xy, size, speed_x, speed_y, color=(255, 255, 255)):
-        super().__init__(xy, size, speed_x, speed_y)
+    def __init__(self, xy, size, speed_x, speed_y, position=None, color=(255, 255, 255)):
+        super().__init__(xy, size, speed_x, speed_y, position)
         self.color = color
         self.color = (255, 0, 0)
 
@@ -41,7 +48,6 @@ class Snow(Particle):
         x, y = self.get_position()
         r = self.get_size()
         col = self.color
-
 
         st_x = x - r
         st_y = y - r

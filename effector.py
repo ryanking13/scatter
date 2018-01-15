@@ -5,6 +5,7 @@ from io import BytesIO
 from particle import *
 from lane import ParticleLane
 
+
 def get_image_size(image):
     tp_file = BytesIO()
     image.save(tp_file, 'GIF')

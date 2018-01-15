@@ -26,7 +26,7 @@ def resize_image(img, cur_size, target_size):
     return img.resize((x_, y_), Image.ANTIALIAS)
 
 
-def snow_lane(img, n_lanes=20, n_frames=50, min_speed=(-2, 5), speed_deviation=(4, 3),
+def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(4, 3),
               min_particle_size=3, particle_size_deviation=2):
 
     lanes = []

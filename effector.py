@@ -81,38 +81,11 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(
     return frames
 
 
-def snow(img, n_frames=50, n_particles=50, avr_speed=-10, speed_deviation_level=1):
-
-    avr_particle_size = 3
-
-    snow_particles = []  # snow particle objects
-    for i in range(n_particles):
-        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-5, 5), speed_y=avr_speed+random.randint(-10, 10)))
-
-    frames = []  # frames that will compose animated image
-    for i in range(n_frames):
-
-        frame = img.copy()
-        effect_mask = Image.new('RGBA', img.size)  # image for masking
-        draw_board = ImageDraw.Draw(effect_mask)
-
-        for p in snow_particles:
-
-            p.draw(draw_board)  # draw new particle
-            p.move()
-
-        frame.paste(effect_mask, mask=effect_mask)
-        # frame = frame.convert('P', Image.ADAPTIVE)
-        frames.append(frame)
-
-    return frames
-
-
 def main():
 
     filename = sys.argv[1]
     img = Image.open(filename)
-    # img = img.convert('P', palette=Image.ADAPTIVE)
+    img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
     img_size = get_image_size(img)
     MAX_FRAME_SIZE = 256 * 10**3  # 256 kb
 
@@ -123,8 +96,7 @@ def main():
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    
-    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=1, palette=Image.ADAPTIVE)
+    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=1)
 
 if __name__ == '__main__':
     main()

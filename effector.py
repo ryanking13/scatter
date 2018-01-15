@@ -112,7 +112,7 @@ def main():
 
     filename = sys.argv[1]
     img = Image.open(filename)
-    img = img.convert('P', palette=Image.ADAPTIVE)
+    # img = img.convert('P', palette=Image.ADAPTIVE)
     img_size = get_image_size(img)
     MAX_FRAME_SIZE = 256 * 10**3  # 256 kb
 
@@ -123,7 +123,8 @@ def main():
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True)
+    
+    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=1, palette=Image.ADAPTIVE)
 
 if __name__ == '__main__':
     main()

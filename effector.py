@@ -32,7 +32,7 @@ def snow(img, n_frames=50, n_particles=50, avr_speed=10, speed_deviation_level=1
 
     snow_particles = []  # snow particle objects
     for i in range(n_particles):
-        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-10, 10), speed_y=avr_speed+random.randint(-10, 10)))
+        snow_particles.append(Snow(xy=img.size, size=avr_particle_size+random.randint(-2, 2)*2, speed_x=random.randint(-5, 5), speed_y=avr_speed+random.randint(-10, 10)))
 
     frames = []  # frames that will compose animated image
     for i in range(n_frames):

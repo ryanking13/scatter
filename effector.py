@@ -25,7 +25,8 @@ def resize_image(img, cur_size, target_size):
     y_ = int(y * side_ratio)
     return img.resize((x_, y_), Image.ANTIALIAS)
 
-def snow_lane(img, n_lanes=10, n_frames=50, min_speed=(2, 5), speed_deviation=(2, 3),
+
+def snow_lane(img, n_lanes=20, n_frames=50, min_speed=(-2, 5), speed_deviation=(4, 3),
               min_particle_size=3, particle_size_deviation=2):
 
     lanes = []
@@ -101,6 +102,7 @@ def snow(img, n_frames=50, n_particles=50, avr_speed=-10, speed_deviation_level=
             p.move()
 
         frame.paste(effect_mask, mask=effect_mask)
+        # frame = frame.convert('P', Image.ADAPTIVE)
         frames.append(frame)
 
     return frames
@@ -119,7 +121,9 @@ def main():
 
     frames = snow_lane(img)
 
-    img.save('out.gif', save_all=True, append_images=frames, optimize=True)
+    # not sure why frames[0].save() not works properly...
+    initial_frame = frames[0]
+    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True)
 
 if __name__ == '__main__':
     main()

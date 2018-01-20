@@ -67,8 +67,8 @@ class ParticleLane:
         while self._is_inside_image():
             positions.append(self._position)
 
-            next_x = self._position[0] + self._speed_x * self._n_frames
-            next_y = self._position[1] + self._speed_y * self._n_frames
+            next_x = self._position[0] + self._speed_x * (self._n_frames + 1)
+            next_y = self._position[1] + self._speed_y * (self._n_frames + 1)
             self._position = (next_x, next_y)
 
         return positions

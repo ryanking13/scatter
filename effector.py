@@ -4,6 +4,7 @@ import math
 from io import BytesIO
 from particle import *
 from lane import ParticleLane
+import color_palette
 
 
 def get_image_size(image):
@@ -27,7 +28,7 @@ def resize_image(img, cur_size, target_size):
     return img.resize((x_, y_), Image.ANTIALIAS)
 
 
-def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(4, 3),
+def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 2), speed_deviation=(4, 3),
               min_particle_size=3, particle_size_deviation=2):
 
     lanes = []
@@ -52,6 +53,7 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(
     for lane in lanes:
         positions = lane.get_positions()
         particle_size, speed_x, speed_y = lane.get_lane_info()
+        color = random.choice(color_palette.pink)
 
         for pos in positions:
             snow = Snow(
@@ -59,7 +61,8 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(
                 size=particle_size,
                 speed_x=speed_x,
                 speed_y=speed_y,
-                position=pos
+                position=pos,
+                color=color
             )
 
             snow_particles.append(snow)

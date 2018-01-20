@@ -53,7 +53,7 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 2), speed_deviation=(
     for lane in lanes:
         positions = lane.get_positions()
         particle_size, speed_x, speed_y = lane.get_lane_info()
-        color = random.choice(color_palette.pink)
+        color = random.choice(color_palette.DAWN)
 
         for pos in positions:
             snow = Snow(
@@ -75,7 +75,6 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 2), speed_deviation=(
         draw_board = ImageDraw.Draw(effect_mask)
 
         for p in snow_particles:
-
             p.draw(draw_board)  # draw new particle
             p.move()
 

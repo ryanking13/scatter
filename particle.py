@@ -39,7 +39,6 @@ class Snow(Particle):
     def __init__(self, xy, size, speed_x, speed_y, position=None, color=(255, 255, 255)):
         super().__init__(xy, size, speed_x, speed_y, position)
         self.color = color
-        # self.color = (255, 0, 0)
 
     def draw(self, d):
 
@@ -60,6 +59,5 @@ class Snow(Particle):
         fill_offset = max_fill / n_slices  # how much fill will be changed per slice
         for i in range(n_slices):
             co = int(i * coord_offset)
-            fo = int(i * fill_offset)
-
+            fo = 255 - int(i * fill_offset)
             d.ellipse([st_x + co, st_y + co, ed_x - co, ed_y - co], fill=col + (fo,))

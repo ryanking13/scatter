@@ -68,7 +68,7 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(
     for i in range(n_frames):
 
         frame = img.copy()
-        effect_mask = Image.new('RGBA', img.size)  # image for masking
+        effect_mask = Image.new('RGBA', img.size, color=(255, 255, 255))  # image for masking
         draw_board = ImageDraw.Draw(effect_mask)
 
         for p in snow_particles:
@@ -76,7 +76,8 @@ def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 5), speed_deviation=(
             p.draw(draw_board)  # draw new particle
             p.move()
 
-        frame.paste(effect_mask, mask=effect_mask)
+        # frame.paste(effect_mask, mask=effect_mask)
+        frame = Image.composite(frame, effect_mask, mask=effect_mask)
         frames.append(frame)
 
     return frames
@@ -97,7 +98,7 @@ def main():
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=1)
+    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=30)  # min duration : 20
 
 if __name__ == '__main__':
     main()

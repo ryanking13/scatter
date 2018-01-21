@@ -42,8 +42,6 @@ class Snow(Particle):
 
     def draw(self, d):
 
-        n_slices = 50  # how many slices will compose one particle
-
         x, y = self.get_position()
         r = self.get_size()
         col = self.color
@@ -54,6 +52,7 @@ class Snow(Particle):
         ed_y = y + r
 
         gap = r // 4  # slice will move from outline(r) to gap
+        n_slices = min(50, r - gap)  # how many slices will compose one particle
         coord_offset = (r - gap) / n_slices  # how much coordinate will be changed per slice
         max_fill = 128
         fill_offset = max_fill / n_slices  # how much fill will be changed per slice

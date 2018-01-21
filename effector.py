@@ -118,7 +118,7 @@ def main():
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=30)  # min duration : 20
+    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=30, loop=100)  # min duration : 20
 
 if __name__ == '__main__':
     main()

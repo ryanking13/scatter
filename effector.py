@@ -7,6 +7,21 @@ from lane import ParticleLane
 import color_palette
 
 
+def generate_weighted_list(st, ed, ratio=(20, 2, 1)):
+
+    nums = [i for i in range(st, ed+1)]
+
+    n_boundary = len(ratio)
+    boundary_offset = (ed - st + n_boundary - 1) // n_boundary
+
+    choices = []
+    for i, n in enumerate(nums):
+        r = ratio[i // boundary_offset]
+        choices.extend([n] * r)
+
+    return choices
+
+
 def get_image_size(image):
     tp_file = BytesIO()
     image.save(tp_file, 'GIF')
@@ -28,15 +43,17 @@ def resize_image(img, cur_size, target_size):
     return img.resize((x_, y_), Image.ANTIALIAS)
 
 
-def snow_lane(img, n_lanes=40, n_frames=50, min_speed=(-2, 2), speed_deviation=(4, 3),
-              min_particle_size=3, particle_size_deviation=2):
+def snow_lane(img, n_lanes=200, n_frames=50, min_speed=(-2, 2), speed_deviation=(4, 3),
+              min_particle_size=1, particle_size_deviation=10):
 
     lanes = []
+    weighted_size_list = generate_weighted_list(min_particle_size, min_particle_size + particle_size_deviation)
     for i in range(n_lanes):
         position = (random.randint(0, img.size[0]), random.randint(0, img.size[1]))
         speed_x = min_speed[0] + random.randint(0, speed_deviation[0])
         speed_y = min_speed[1] + random.randint(0, speed_deviation[1])
-        size = min_particle_size + random.randint(0, particle_size_deviation)
+        # size = min_particle_size + random.randint(0, particle_size_deviation)
+        size = random.choice(weighted_size_list)
 
         lane = ParticleLane(
             image_size=img.size,

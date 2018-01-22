@@ -4,12 +4,12 @@
 
 # maximum size of each frame ( unit : byte )
 FRAME_SIZES = [
-    160000,
-    640000,
-    1280000,
-    2560000,
-    10240000,
-    100000000000000,
+    16000,
+    64000,
+    128000,
+    256000,
+    1024000,
+    10000000000000,
 ]
 
 # default value of how many frames will output image will be composed of

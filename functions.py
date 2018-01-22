@@ -16,7 +16,7 @@ def generate_weighted_list(st, ed, ratio=(20, 2, 1)):
     nums = [i for i in range(st, ed+1)]
 
     n_boundary = len(ratio)
-    boundary_offset = (ed - st + n_boundary - 1) // n_boundary
+    boundary_offset = (ed - st + n_boundary) // n_boundary
 
     choices = []
     for i, n in enumerate(nums):

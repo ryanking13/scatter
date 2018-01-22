@@ -6,16 +6,15 @@ from lane import ParticleLane
 import particle
 
 
-def snow_lane(img, n_lanes=200, n_frames=50, min_speed=(-2, 2), speed_deviation=(4, 3),
-              min_particle_size=1, particle_size_deviation=10):
+def snow_lane(img, n_lanes, n_frames, min_speed, max_speed,
+              particle_size_range):
 
     lanes = []
-    weighted_size_list = generate_weighted_list(min_particle_size, min_particle_size + particle_size_deviation)
+    weighted_size_list = generate_weighted_list(particle_size_range[0], particle_size_range[1])
     for i in range(n_lanes):
         position = (random.randint(0, img.size[0]), random.randint(0, img.size[1]))
-        speed_x = min_speed[0] + random.randint(0, speed_deviation[0])
-        speed_y = min_speed[1] + random.randint(0, speed_deviation[1])
-        # size = min_particle_size + random.randint(0, particle_size_deviation)
+        speed_x = random.randint(min_speed[0], max_speed[0])
+        speed_y = random.randint(min_speed[1], max_speed[1])
         size = random.choice(weighted_size_list)
 
         lane = ParticleLane(
@@ -65,3 +64,36 @@ def snow_lane(img, n_lanes=200, n_frames=50, min_speed=(-2, 2), speed_deviation=
 
     return frames
 
+
+def decorate(img, args):
+
+    non_continuous_decoraters = {
+
+    }
+
+    continuous_decoraters = {
+        'SNOW': snow_lane,
+    }
+
+    particle_type = args['type']
+    continuous = args['continuous']
+    density = args['density']
+    n_frames = args['n_frames']
+    speed = args['speed']
+    min_speed = (speed[0], speed[2])
+    max_speed = (speed[1], speed[3])
+    size = args['size']
+
+    if continuous:
+        try:
+            decorator = continuous_decoraters[particle_type]
+            return decorator(img, n_lanes=density, n_frames=n_frames,
+                             min_speed=min_speed, max_speed=max_speed,
+                             particle_size_range=size)
+        except KeyError:
+            raise
+    else:
+        try:
+            decorator = non_continuous_decoraters[particle_type]
+        except KeyError:
+            raise

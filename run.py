@@ -2,11 +2,15 @@ import argparse
 from PIL import Image
 import config
 from functions import *
-import decorator
+import decorators
+
+verbose = False  # value will be set on parse_arguments() function
 
 
 def parse_arguments():
     """ parse command line arguments """
+
+    global verbose
 
     parser = argparse.ArgumentParser()
 
@@ -40,7 +44,7 @@ def parse_arguments():
                               '(0 to 5, 0: smallest, 5: largest) '
                               '(default={})'.format(config.DEFAULT_SIZE_LEVEL)))
 
-    parser.add_argument('-v', '--verbose', default=False,
+    parser.add_argument('-v', '--verbose', default=False, dest='verbose',
                         help='print intermediate logs')
 
     parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
@@ -54,35 +58,46 @@ def parse_arguments():
     settings = {
         'filename': args.filename,
         'frame_size': config.FRAME_SIZES[args.compress],
-        'continous': not args.not_continuous,
+        'continuous': not args.not_continuous,
         'density': config.PARTICLE_NUMBERS[args.density] if args.not_continuous else config.LANE_NUMBERS[args.density],
-        'n_frame': args.frames,
+        'n_frames': args.frames,
         'type': args.particle.upper(),
         'speed': config.SPEED_LEVELS[args.speed],
         'size': config.SIZE_LEVELS[args.size],
-        'verbose': args.verbose,
-        'webp': args.webp,
+        'format': 'WEBP' if args.webp else 'GIF',
     }
 
     return settings
 
 
+def log(string, force=False):
+    if verbose or force:
+        print('[*] {}'.format(string))
+
+
 def main():
 
     args = parse_arguments()
-    img = Image.open(args.get('filename'))
-    img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
+
+    img = Image.open(args['filename'])
+    log('Successfully opened image: {}'.format(args.get('filename')))
+
+    if args['format'] == 'GIF':
+        img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
+
     img_size = get_image_size(img)
-    MAX_FRAME_SIZE = 256 * 10**3  # 256 kb
+    if img_size > args['frame_size']:
+        img = resize_image(img, img_size, args['frame_size'])
+        log('Compressed image to {}'.format(img.size))
 
-    if img_size > MAX_FRAME_SIZE:
-        img = resize_image(img, img_size, MAX_FRAME_SIZE)
-
-    frames = decorator.snow_lane(img)
+    log('Start decoration...')
+    frames = decorators.decorate(img, args)
+    log('Done decoratiion')
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
     initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=30, loop=100)  # min duration : 20
+    log('Saved image')
 
 if __name__ == '__main__':
     main()

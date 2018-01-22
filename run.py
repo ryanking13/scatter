@@ -16,30 +16,31 @@ def parse_arguments():
 
     parser.add_argument('filename', help='image file that will be decorated')
 
-    parser.add_argument('-c', '--compress', default=config.DEFAULT_COMPRESS_LEVEL,
+    parser.add_argument('-c', '--compress', default=config.DEFAULT_COMPRESS_LEVEL, type=int,
                         help=('set compress level of output image. '
                               '(0 to 5, 0: highest compress, 5: no compress) '
                               '(default={})'.format(config.DEFAULT_COMPRESS_LEVEL)))
 
-    parser.add_argument('-d', '--density', default=config.DEFAULT_DENSITY_LEVEL,
+    parser.add_argument('-d', '--density', default=config.DEFAULT_DENSITY_LEVEL, type=int,
                         help=('set particles density. '
                               '(0 to 5, 0: most sparse, 5: most dense) '
                               '(default={})'.format(config.DEFAULT_DENSITY_LEVEL)))
 
-    parser.add_argument('-f', '--frames', default=config.DEFAULT_N_FRAMES,
+    parser.add_argument('-f', '--frames', default=config.DEFAULT_N_FRAMES, type=int,
                         help=('set output image\'s number of frames '
                               '(default={})'.format(config.DEFAULT_N_FRAMES)))
 
     parser.add_argument('-p', '--particle', default=config.DEFAULT_PARTICLE_TYPE,
                         help=('set type of particle '
                               '(types: SNOW) '
-                              '(default={}'.format(config.DEFAULT_PARTICLE_TYPE)))
+                              '(default={})'.format(config.DEFAULT_PARTICLE_TYPE)))
 
-    parser.add_argument('-s', '--speed', default=config.DEFAULT_SPEED_LEVEL,
+    parser.add_argument('-s', '--speed', default=config.DEFAULT_SPEED_LEVEL, type=int,
                         help=('set particles speed. '
                               '(0 to 5, 0: slowest, 5: fastest) '
                               '(default={})'.format(config.DEFAULT_SPEED_LEVEL)))
-    parser.add_argument('-S', '--size', default=config.DEFAULT_SIZE_LEVEL,
+
+    parser.add_argument('-S', '--size', default=config.DEFAULT_SIZE_LEVEL, type=int,
                         help=('set size of particle '
                               '(0 to 5, 0: smallest, 5: largest) '
                               '(default={})'.format(config.DEFAULT_SIZE_LEVEL)))
@@ -85,19 +86,23 @@ def main():
 
     if args['format'] == 'GIF':
         img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
+    else:
+        print("NOT IMPLEMENTED")
+        exit(0)
 
     img_size = get_image_size(img)
     if img_size > args['frame_size']:
         img = resize_image(img, img_size, args['frame_size'])
         log('Compressed image to {}'.format(img.size))
 
-    log('Start decoration...')
+    log('Starting decoration...')
     frames = decorators.decorate(img, args)
-    log('Done decoratiion')
+    log('Done decoration')
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    initial_frame.save('out.gif', save_all=True, append_images=frames, optimize=True, duration=30, loop=100)  # min duration : 20
+    initial_frame.save('out.{}'.format(args['format'].lower()), save_all=True, append_images=frames,
+                       optimize=True, duration=30, loop=100)  # min duration : 20
     log('Saved image')
 
 if __name__ == '__main__':

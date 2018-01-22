@@ -44,7 +44,7 @@ def parse_arguments():
                               '(0 to 5, 0: smallest, 5: largest) '
                               '(default={})'.format(config.DEFAULT_SIZE_LEVEL)))
 
-    parser.add_argument('-v', '--verbose', default=False, dest='verbose',
+    parser.add_argument('-v', '--verbose', default=False, const=True, action='store_const',
                         help='print intermediate logs')
 
     parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
@@ -54,6 +54,7 @@ def parse_arguments():
                         help='output image becomes not continous')
 
     args = parser.parse_args()
+    verbose = args.verbose
 
     settings = {
         'filename': args.filename,

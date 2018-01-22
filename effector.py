@@ -47,10 +47,10 @@ def parse_arguments():
     parser.add_argument('-v', '--verbose', default=False,
                         help='print intermediate logs')
 
-    parser.add_argument('-w', '--webp', default=False, const=True,
+    parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
                         help='change output image format from gif to webp')
 
-    parser.add_argument('--not_continuous', default=False, const=True,
+    parser.add_argument('--not_continuous', default=False, const=True, action='store_const',
                         help='output image becomes not continous')
 
     args = parser.parse_args()
@@ -169,8 +169,8 @@ def snow_lane(img, n_lanes=200, n_frames=50, min_speed=(-2, 2), speed_deviation=
 
 def main():
 
-    filename = sys.argv[1]
-    img = Image.open(filename)
+    args = parse_arguments()
+    img = Image.open(args.get('filename'))
     img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
     img_size = get_image_size(img)
     MAX_FRAME_SIZE = 256 * 10**3  # 256 kb

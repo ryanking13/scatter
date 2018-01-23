@@ -78,6 +78,6 @@ SIZE_LEVELS = [
 # default particle size level for SIZE_LEVELS
 DEFAULT_SIZE_LEVEL = 3
 
-
+DEFAULT_COLOR_PALETTE = 'WHITE'
 
 

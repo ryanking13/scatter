@@ -35,6 +35,11 @@ def parse_arguments():
                               '(types: SNOW) '
                               '(default={})'.format(config.DEFAULT_PARTICLE_TYPE)))
 
+    parser.add_argument('-P', '--palette', default=config.DEFAULT_COLOR_PALETTE,
+                        help=('set color palette '
+                              '(types: BRIGHT, DAWN, PINK, WHITE) '
+                              '(default={})'.format(config.DEFAULT_COLOR_PALETTE)))
+
     parser.add_argument('-s', '--speed', default=config.DEFAULT_SPEED_LEVEL, type=int,
                         help=('set particles speed. '
                               '(0 to 5, 0: slowest, 5: fastest) '
@@ -48,9 +53,11 @@ def parse_arguments():
     parser.add_argument('-v', '--verbose', default=False, const=True, action='store_const',
                         help='print intermediate logs')
 
+    # not implemented
     parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
                         help='change output image format from gif to webp')
 
+    # not implemented
     parser.add_argument('--not_continuous', default=False, const=True, action='store_const',
                         help='output image becomes not continous')
 
@@ -64,6 +71,7 @@ def parse_arguments():
         'density': config.PARTICLE_NUMBERS[args.density] if args.not_continuous else config.LANE_NUMBERS[args.density],
         'n_frames': args.frames,
         'type': args.particle.upper(),
+        'palette': args.palette.upper(),
         'speed': config.SPEED_LEVELS[args.speed],
         'size': config.SIZE_LEVELS[args.size],
         'format': 'WEBP' if args.webp else 'GIF',

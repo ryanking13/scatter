@@ -22,5 +22,19 @@ PINK = [
     (0xf8, 0xef, 0xf1)
 ]
 
+WHITE = [
+    (0xff, 0xff, 0xff)
+]
+
+
+def get_palette(palette_name):
+
+    try:
+        palette = eval(palette_name)
+    except NameError:
+        print('[-] palette {} not supported, using default palette'.format(palette_name))
+        palette = WHITE
+
+    return palette
 
 

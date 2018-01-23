@@ -17,7 +17,7 @@ $ pip install Pillow
 
 ```
 usage: run.py [-h] [-c COMPRESS] [-d DENSITY] [-f FRAMES] [-p PARTICLE]
-              [-s SPEED] [-S SIZE] [-v] [-w] [--not_continuous]
+              [-P PALETTE] [-s SPEED] [-S SIZE] [-v] [-w] [--not_continuous]
               filename
 
 positional arguments:
@@ -35,6 +35,9 @@ optional arguments:
                         set output image's number of frames (default=50)
   -p PARTICLE, --particle PARTICLE
                         set type of particle (types: SNOW) (default=SNOW)
+  -P PALETTE, --palette PALETTE
+                        set color palette (types: BRIGHT, DAWN, PINK, WHITE)
+                        (default=WHITE)
   -s SPEED, --speed SPEED
                         set particles speed. (0 to 5, 0: slowest, 5: fastest)
                         (default=3)

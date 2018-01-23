@@ -7,7 +7,7 @@ import particle
 
 
 def snow_lane(img, n_lanes, n_frames, min_speed, max_speed,
-              particle_size_range):
+              particle_size_range, palette):
 
     lanes = []
     weighted_size_list = generate_weighted_list(particle_size_range[0], particle_size_range[1])
@@ -32,7 +32,7 @@ def snow_lane(img, n_lanes, n_frames, min_speed, max_speed,
     for lane in lanes:
         positions = lane.get_positions()
         particle_size, speed_x, speed_y = lane.get_lane_info()
-        color = random.choice(color_palette.BRIGHT)
+        color = random.choice(palette)
 
         for pos in positions:
             snow = particle.Snow(
@@ -83,13 +83,14 @@ def decorate(img, args):
     min_speed = (speed[0], speed[2])
     max_speed = (speed[1], speed[3])
     size = args['size']
+    palette = color_palette.get_palette(args['palette'])
 
     if continuous:
         try:
             decorator = continuous_decoraters[particle_type]
             return decorator(img, n_lanes=density, n_frames=n_frames,
                              min_speed=min_speed, max_speed=max_speed,
-                             particle_size_range=size)
+                             particle_size_range=size, palette=palette)
         except KeyError:
             raise
     else:

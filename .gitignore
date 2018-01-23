@@ -1,3 +1,4 @@
 .idea
 __pycache__
 /*.gif
+ignored_images/

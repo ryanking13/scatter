@@ -50,11 +50,11 @@ optional arguments:
 
 ## Sample
 
-<img src="./sample/original.jpg" width=697 height=435 />
+<img src="./sample/sample.gif" width=697 height=435 />
 
 <br>
 
-<img src="./sample/sample.gif" width=697 height=435 />
+<img src="./sample/sample2.gif" width=697 height=435 />
 
 ## TODO
 
@@ -62,6 +62,7 @@ optional arguments:
 1. Fixing particle color changing problem
 1. Optimizing decoration time
 1. WEBP support
+1. Solve PNG time problem
 1. Adding more user-controlled parameters
 1. Adding more color palettes
 

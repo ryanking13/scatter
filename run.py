@@ -1,16 +1,13 @@
 import argparse
 from PIL import Image
 import config
-from functions import *
 import decorators
-
-verbose = False  # value will be set on parse_arguments() function
+from functions import *
+import logger
 
 
 def parse_arguments():
     """ parse command line arguments """
-
-    global verbose
 
     parser = argparse.ArgumentParser()
 
@@ -62,7 +59,8 @@ def parse_arguments():
                         help='output image becomes not continous')
 
     args = parser.parse_args()
-    verbose = args.verbose
+    if args.verbose:
+        logger.set_verbose()
 
     settings = {
         'filename': args.filename,
@@ -80,17 +78,12 @@ def parse_arguments():
     return settings
 
 
-def log(string, force=False):
-    if verbose or force:
-        print('[*] {}'.format(string))
-
-
 def main():
 
     args = parse_arguments()
 
     img = Image.open(args['filename'])
-    log('Successfully opened image: {}'.format(args.get('filename')))
+    logger.log('[*] Successfully opened image: {}'.format(args.get('filename')))
 
     if args['format'] == 'GIF':
         img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
@@ -101,17 +94,17 @@ def main():
     img_size = get_image_size(img)
     if img_size > args['frame_size']:
         img = resize_image(img, img_size, args['frame_size'])
-        log('Compressed image to {}'.format(img.size))
+        logger.log('[*] Compressed image to {}'.format(img.size))
 
-    log('Starting decoration...')
+    logger.log('[*] Starting decoration...')
     frames = decorators.decorate(img, args)
-    log('Done decoration')
+    logger.log('[*] Done decoration')
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
     initial_frame.save('out.{}'.format(args['format'].lower()), save_all=True, append_images=frames,
-                       optimize=True, duration=30, loop=100)  # min duration : 20
-    log('Saved image')
+                       optimize=True, duration=30, loop=0xffff)  # min duration : 20
+    logger.log('[*] Saved image')
 
 if __name__ == '__main__':
     main()

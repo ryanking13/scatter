@@ -1,3 +1,5 @@
+import logger
+
 BRIGHT = [
     (0x5f, 0xa5, 0x5a),
     (0x01, 0xb4, 0xbc),
@@ -29,10 +31,14 @@ WHITE = [
 
 def get_palette(palette_name):
 
+    if len(palette_name) > 8:  # for security issue, restrict palette name length
+        logger.error('[-] palette {} not supported, using default palette'.format(palette_name))
+        return WHITE
+
     try:
         palette = eval(palette_name)
     except NameError:
-        print('[-] palette {} not supported, using default palette'.format(palette_name))
+        logger.error('[-] palette {} not supported, using default palette'.format(palette_name))
         palette = WHITE
 
     return palette

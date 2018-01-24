@@ -2,6 +2,7 @@ import random
 from PIL import ImageDraw
 import color_palette
 from functions import *
+import logger
 from lane import ParticleLane
 import particle
 
@@ -61,6 +62,8 @@ def snow_lane(img, n_lanes, n_frames, min_speed, max_speed,
             frame = Image.composite(frame, mask, mask=mask)  # add particle to frame
 
         frames.append(frame)
+
+        logger.log('[*] Working on ({}/{}) frame...'.format(i+1, n_frames))
 
     return frames
 

@@ -1,4 +1,5 @@
 import random
+from PIL import Image, ImageDraw
 
 
 class Particle:
@@ -39,6 +40,8 @@ class Snow(Particle):
     def __init__(self, xy, size, speed_x, speed_y, position=None, color=(255, 255, 255)):
         super().__init__(xy, size, speed_x, speed_y, position)
         self.color = color
+        # self.plate = self._set_plate()
+        self.plate = None
 
     def draw(self, d):
 
@@ -60,3 +63,34 @@ class Snow(Particle):
             co = int(i * coord_offset)
             fo = 255 - int(i * fill_offset)
             d.ellipse([st_x + co, st_y + co, ed_x - co, ed_y - co], fill=col + (fo,))
+
+    def _set_plate(self):
+
+        plate = Image.new('RGBA', (self._max_x*4, self._max_y*4), color=(255, 255, 255))
+        d = ImageDraw.Draw(plate)
+
+        r = self.get_size()
+        col = self.color
+
+        st_x = self._max_x * 2 - r
+        st_y = self._max_y * 2 - r
+        ed_x = self._max_x * 2 + r
+        ed_y = self._max_y * 2 + r
+
+        gap = r // 4  # slice will move from outline(r) to gap
+        n_slices = min(50, r - gap)  # how many slices will compose one particle
+        coord_offset = (r - gap) / n_slices  # how much coordinate will be changed per slice
+        max_fill = 128
+        fill_offset = max_fill / n_slices  # how much fill will be changed per slice
+        for i in range(n_slices):
+            co = int(i * coord_offset)
+            fo = 255 - int(i * fill_offset)
+            d.ellipse([st_x + co, st_y + co, ed_x - co, ed_y - co], fill=col + (fo,))
+
+        return plate
+
+    def advanced_draw(self, img):
+        # currently not working well...
+        x, y = self.get_position()
+        mask = self.plate.crop((2 * self._max_x - x, 2 * self._max_y - y, 3 * self._max_x - x, 3 * self._max_y - y))
+        return Image.composite(img, mask, mask=mask)

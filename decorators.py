@@ -53,10 +53,12 @@ def snow_lane(img, n_lanes, n_frames, min_speed, max_speed,
         frame = img.copy()
 
         for p in snow_particles:
+
             mask = Image.new('RGBA', img.size, color=(255, 255, 255))  # image for masking
             board = ImageDraw.Draw(mask)
 
             p.draw(board)
+            # mask = p.advanced_draw(mask)
             p.move()
 
             frame = Image.composite(frame, mask, mask=mask)  # add particle to frame

@@ -50,7 +50,6 @@ def parse_arguments():
     parser.add_argument('-v', '--verbose', default=False, const=True, action='store_const',
                         help='print intermediate logs')
 
-    # not implemented
     parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
                         help='change output image format from gif to webp')
 
@@ -87,9 +86,6 @@ def main():
 
     if args['format'] == 'GIF':
         img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
-    else:
-        print("NOT IMPLEMENTED")
-        exit(0)
 
     img_size = get_image_size(img)
     if img_size > args['frame_size']:

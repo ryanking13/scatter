@@ -50,9 +50,12 @@ def parse_arguments():
     parser.add_argument('-v', '--verbose', default=False, const=True, action='store_const',
                         help='print intermediate logs')
 
-    parser.add_argument('-w', '--webp', default=False, const=True, action='store_const',
+    parser.add_argument('-w', '--webp', default='GIF', const='WEBP', dest='format', action='store_const',
                         help='change output image format from gif to webp')
 
+    parser.add_argument('-o', '--output', default=config.DEFAULT_OUTPUT_NAME,
+                        help=('set output file name '
+                              '(default={})'.format(config.DEFAULT_OUTPUT_NAME)))
     # not implemented
     parser.add_argument('--not_continuous', default=False, const=True, action='store_const',
                         help='output image becomes not continous')
@@ -71,7 +74,8 @@ def parse_arguments():
         'palette': args.palette.upper(),
         'speed': config.SPEED_LEVELS[args.speed],
         'size': config.SIZE_LEVELS[args.size],
-        'format': 'WEBP' if args.webp else 'GIF',
+        'format': args.format,
+        'outputname': args.output if '.' in args.output else args.output + '.' + args.format.lower()
     }
 
     return settings
@@ -82,7 +86,7 @@ def main():
     args = parse_arguments()
 
     img = Image.open(args['filename'])
-    logger.log('[*] Successfully opened image: {}'.format(args.get('filename')))
+    logger.log('[*] Successfully opened image: {}'.format(args.get('filename').split('/')[-1]))
 
     if args['format'] == 'GIF':
         img = img.convert('P', palette=Image.ADAPTIVE, dither=Image.NONE)
@@ -98,9 +102,9 @@ def main():
 
     # not sure why frames[0].save() not works properly...
     initial_frame = frames[0]
-    initial_frame.save('out.{}'.format(args['format'].lower()), save_all=True, append_images=frames,
+    initial_frame.save(args['outputname'], save_all=True, append_images=frames,
                        optimize=True, duration=30, loop=0xffff)  # min duration : 20
-    logger.log('[*] Saved image')
+    logger.log('[*] Saved image to - {}'.format(args['outputname']))
 
 if __name__ == '__main__':
     main()

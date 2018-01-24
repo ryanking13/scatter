@@ -12,23 +12,21 @@ class Particle:
         if not position:
             self._x = random.randint(0, self._max_x)
             self._y = random.randint(-self._max_y, 0)
+            if speed_y < 0:
+                self._y += self._max_y * 2
+
         else:
             self._x = position[0]
             self._y = position[1]
-
-        if speed_y < 0:
-            self._y = random.randint(self._max_y, self._max_y * 2)
 
         self._speed_x = speed_x
         self._speed_y = speed_y
 
     def move(self):
-
         self._x += self._speed_x
         self._y += self._speed_y
 
     def get_position(self):
-
         return self._x, self._y
 
     def get_size(self):

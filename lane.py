@@ -24,12 +24,12 @@ class ParticleLane:
 
         top_y = 0
         if self._speed_y < 0:
-            top_y = self._max_y
+            top_y = self._max_y - 1
 
-        top_x = self._start_x + self._speed_x * ((self._start_y - top_y) / self._speed_y)  # d = vt
+        top_x = self._start_x - self._speed_x * ((self._start_y - top_y) / self._speed_y)  # d = vt
         frame_offset = random.randint(0, self._n_frames - 1)
 
-        init_x = int(top_x - self._speed_x * frame_offset)
+        init_x = int(top_x)
         init_y = int(top_y - self._speed_y * frame_offset)
 
         return init_x, init_y

@@ -1,4 +1,5 @@
 import argparse
+from ast import literal_eval
 from PIL import Image
 import config
 import decorators
@@ -56,6 +57,15 @@ def parse_arguments():
     parser.add_argument('-o', '--output', default=config.DEFAULT_OUTPUT_NAME,
                         help=('set output file name '
                               '(default={})'.format(config.DEFAULT_OUTPUT_NAME)))
+
+    parser.add_argument('--custom_speed', default=None,
+                        help=('set custom particle speed '
+                              '(format: (x_min,x_max,y_min,y_max))'))
+
+    parser.add_argument('--custom_size', default=None,
+                        help=('set custom particle size '
+                              '(foramt: (min, max)'))
+
     # not implemented
     parser.add_argument('--not_continuous', default=False, const=True, action='store_const',
                         help='output image becomes not continous')
@@ -77,6 +87,12 @@ def parse_arguments():
         'format': args.format,
         'outputname': args.output if '.' in args.output else args.output + '.' + args.format.lower()
     }
+
+    if args.custom_speed:
+        settings['speed'] = literal_eval(args.custom_speed)
+
+    if args.custom_size:
+        settings['size'] = literal_eval(args.custom_size)
 
     return settings
 

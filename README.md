@@ -61,7 +61,6 @@ optional arguments:
 1. Adding decoration types
 1. Fixing particle color changing problem
 1. Optimizing decoration time
-1. WEBP support
 1. Solve PNG time problem
 1. Adding more user-controlled parameters
 1. Adding more color palettes
@@ -69,3 +68,4 @@ optional arguments:
 ## CHANGELOG
 
 - 2018-01-23: Add public usage and attached LICENSE
+- 2018-01-24: WEBP support

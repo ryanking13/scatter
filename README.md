@@ -50,11 +50,19 @@ optional arguments:
 
 ## Sample
 
+__GIF__
+
 <img src="./sample/sample.gif" width=697 height=435 />
 
 <br>
 
-<img src="./sample/sample2.gif" width=697 height=435 />
+__WEBP__
+
+<img src="./sample/sample2.webp" />
+
+<br>
+
+<img src="./sample/sample3.webp" />
 
 ## TODO
 

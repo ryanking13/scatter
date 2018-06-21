@@ -1,4 +1,4 @@
-# Image Decorator
+# Scatter
 
 Add some beautiful & animated decoration on your image!
 
